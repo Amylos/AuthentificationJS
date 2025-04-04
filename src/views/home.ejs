@@ -7,8 +7,13 @@
 </head>
 <body>
     <%- include('partials/header.ejs') %>
-    HOME
-    <button id="TestTokenBtn">Test token</button>
+    <div id="home-container">
+        <h1>Welcome to Home</h1>
+        <div class="button-group">
+            <button id="TestTokenBtn" class="primary-btn">Test Token</button>
+            <a href="/admin">Test admin route</a>
+        </div>
+    </div>
     <%- include('partials/footer.ejs') %>
 </body>
 </html>
@@ -16,12 +21,11 @@
 <script>
 
     const tokenBtn = document.getElementById("TestTokenBtn");
-
     tokenBtn.addEventListener('click', (event)=>{
         console.log('click token test');
         event.preventDefault();
 
-        fetch('http://localhost:3000/token', {
+        fetch('http://localhost:3000/api/auth/token', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -29,9 +33,77 @@
             credentials: "include"
         })
         .then(response => response.json())
-        .then(data => console.log(data))
+        .then(data => {
+            console.log(data);
+        })
         .catch(error => console.error("Error:", error));
     })
 
+
 </script>
 
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f6f8fa;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        margin: 0;
+    }
+
+    #home-container {
+        background-color: white;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        width: 350px;
+    }
+
+    h1 {
+        margin-bottom: 20px;
+        color: #24292e;
+    }
+
+    .button-group {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+    }
+
+    .primary-btn {
+        background-color: #2ea44f;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 6px;
+        font-size: 14px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .primary-btn:hover {
+        background-color: #22863a;
+    }
+
+    .secondary-btn {
+        background-color: #d1d5da;
+        color: #24292e;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 6px;
+        font-size: 14px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .secondary-btn:hover {
+        background-color: #bdbfc3;
+    }
+
+</style>

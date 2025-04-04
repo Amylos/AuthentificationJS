@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const User = require('../Models/user.model.Mysql');
+const User = require('../Models/user.model');
 require('dotenv').config();
 
 module.exports.Register = async (req, res) => {
@@ -41,9 +41,13 @@ module.exports.Login = async (req, res) => {
         const token = jwt.sign({ email : email }, process.env.JWT_SECRET, {
         expiresIn: '1h',
         });
-
-        res.cookie('token',token, {httpOnly:true});
-        res.status(200).json({ message: "Login successful", user : {email : user.email, role : user.role }, token, });
+        const session = {
+            token : token,
+            role : user.role,
+        }
+        // Store all needed informations in cookies
+        res.cookie('session',session, {httpOnly:true});
+        res.status(200).json({ message: "Login successful"});
 
     } catch (ex) {
         console.error("Failed to login:", ex);
@@ -53,10 +57,13 @@ module.exports.Login = async (req, res) => {
 
 module.exports.Logout = async (req,res) =>{
     try{
-        // remove cookies
-        res.status(200).json({ message: "Logout successful"});
+        // Remove all cookies from session
+        res.clearCookie('session');
+        res.status(200).json({ message: "Logout successful : cookie cleared"});
 
     }catch(ex){
         res.status(500).json({ message: "Error while logging out"});
     }
 }
+
+
